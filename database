@@ -1,0 +1,524 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (18.7)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# \l
+                                                                    List of databases
+   Name    |  Owner   | Encoding | Locale Provider |          Collate           |           Ctype            | Locale | ICU Rules |   Access privileges
+-----------+----------+----------+-----------------+----------------------------+----------------------------+--------+-----------+-----------------------
+  student  | postgres | UTF8     | libc            | English_United States.1252 | English_United States.1252 |        |           |
+ college   | postgres | UTF8     | libc            | English_United States.1252 | English_United States.1252 |        |           |
+ college1  | postgres | UTF8     | libc            | English_United States.1252 | English_United States.1252 |        |           |
+ postgres  | postgres | UTF8     | libc            | English_United States.1252 | English_United States.1252 |        |           |
+ student1  | postgres | UTF8     | libc            | English_United States.1252 | English_United States.1252 |        |           |
+ template0 | postgres | UTF8     | libc            | English_United States.1252 | English_United States.1252 |        |           | =c/postgres          +
+           |          |          |                 |                            |                            |        |           | postgres=CTc/postgres
+ template1 | postgres | UTF8     | libc            | English_United States.1252 | English_United States.1252 |        |           | =c/postgres          +
+           |          |          |                 |                            |                            |        |           | postgres=CTc/postgres
+(7 rows)
+
+
+postgres=# CREATE DATABASE college;
+ERROR:  database "college" already exists
+postgres=# CREATE DATABASE college1;
+ERROR:  database "college1" already exists
+postgres=# CREATE DATABASE clg;
+CREATE DATABASE
+postgres=# \c clg
+You are now connected to database "clg" as user "postgres".
+clg=# CREATE TABLE students (
+clg(#      id SERIAL PRIMARY KEY,
+clg(#      name VARCHAR(100),
+clg(#      age  INT,
+clg(#      course VARCHAR(50),
+clg(#      marks INT
+clg(# );
+CREATE TABLE
+clg=# INSERT INTO students(name,age,course,marks)
+clg-# VALUES
+clg-# ('Rahul',21,'BCA',85),
+clg-# ('Priya',20,'BCA',90),
+clg-# ('Arun',21,'BCA',75),
+clg-# ('Sneha',20,'BCA',89);
+INSERT 0 4
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=# SELECT * FROM students;
+ id | name  | age | course | marks
+----+-------+-----+--------+-------
+  1 | Rahul |  21 | BCA    |    85
+  2 | Priya |  20 | BCA    |    90
+  3 | Arun  |  21 | BCA    |    75
+  4 | Sneha |  20 | BCA    |    89
+(4 rows)
+
+
+clg=# SELECT * FROM students
+clg-# WHERE marks>80;
+ id | name  | age | course | marks
+----+-------+-----+--------+-------
+  1 | Rahul |  21 | BCA    |    85
+  2 | Priya |  20 | BCA    |    90
+  4 | Sneha |  20 | BCA    |    89
+(3 rows)
+
+
+clg=# SELECT * FROM students WHERE marks<80;
+ id | name | age | course | marks
+----+------+-----+--------+-------
+  3 | Arun |  21 | BCA    |    75
+(1 row)
+
+
+clg=# SELECT * FROM students ORDER BY marks DESC;
+ id | name  | age | course | marks
+----+-------+-----+--------+-------
+  2 | Priya |  20 | BCA    |    90
+  4 | Sneha |  20 | BCA    |    89
+  1 | Rahul |  21 | BCA    |    85
+  3 | Arun  |  21 | BCA    |    75
+(4 rows)
+
+
+clg=# SELECT * FROM students ORDER BY marks ASEC;
+ERROR:  syntax error at or near "ASEC"
+LINE 1: SELECT * FROM students ORDER BY marks ASEC;
+                                              ^
+clg=# SELECT * FROM students ORDER BY marks ASC;
+ id | name  | age | course | marks
+----+-------+-----+--------+-------
+  3 | Arun  |  21 | BCA    |    75
+  1 | Rahul |  21 | BCA    |    85
+  4 | Sneha |  20 | BCA    |    89
+  2 | Priya |  20 | BCA    |    90
+(4 rows)
+
+
+clg=# UPDATE students SET marks=92 WHERE id=1;
+UPDATE 1
+clg=# SELECT * FROM students;
+ id | name  | age | course | marks
+----+-------+-----+--------+-------
+  2 | Priya |  20 | BCA    |    90
+  3 | Arun  |  21 | BCA    |    75
+  4 | Sneha |  20 | BCA    |    89
+  1 | Rahul |  21 | BCA    |    92
+(4 rows)
+
+
+clg=# UPDATE students SET marks=89 WHERE id=2;
+UPDATE 1
+clg=# SELECT * FROM students;
+ id | name  | age | course | marks
+----+-------+-----+--------+-------
+  3 | Arun  |  21 | BCA    |    75
+  4 | Sneha |  20 | BCA    |    89
+  1 | Rahul |  21 | BCA    |    92
+  2 | Priya |  20 | BCA    |    89
+(4 rows)
+
+
+clg=# UPDATE students SET marks=72 WHERE id=3;
+UPDATE 1
+clg=# SELECT * FROM students;
+ id | name  | age | course | marks
+----+-------+-----+--------+-------
+  4 | Sneha |  20 | BCA    |    89
+  1 | Rahul |  21 | BCA    |    92
+  2 | Priya |  20 | BCA    |    89
+  3 | Arun  |  21 | BCA    |    72
+(4 rows)
+
+
+clg=# UPDATE students SET marks=69 WHERE id=4;
+UPDATE 1
+clg=# SELECT * FROM students;
+ id | name  | age | course | marks
+----+-------+-----+--------+-------
+  1 | Rahul |  21 | BCA    |    92
+  2 | Priya |  20 | BCA    |    89
+  3 | Arun  |  21 | BCA    |    72
+  4 | Sneha |  20 | BCA    |    69
+(4 rows)
+
+
+clg=# UPDATE students SET name='shree' WHERE id=3;
+UPDATE 1
+clg=# SELECT * FROM students;
+ id | name  | age | course | marks
+----+-------+-----+--------+-------
+  1 | Rahul |  21 | BCA    |    92
+  2 | Priya |  20 | BCA    |    89
+  4 | Sneha |  20 | BCA    |    69
+  3 | shree |  21 | BCA    |    72
+(4 rows)
+
+
+clg=# UPDATE students SET name='gowri' WHERE id=4;
+UPDATE 1
+clg=# UPDATE students SET name='hajira' WHERE id=2;
+UPDATE 1
+clg=# UPDATE students SET name='yashoda' WHERE id=3;
+UPDATE 1
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  1 | Rahul   |  21 | BCA    |    92
+  4 | gowri   |  20 | BCA    |    69
+  2 | hajira  |  20 | BCA    |    89
+  3 | yashoda |  21 | BCA    |    72
+(4 rows)
+
+
+clg=# UPDATE students SET marks=88 WHERE id=4;
+UPDATE 1
+clg=# UPDATE students SET marks=88 WHERE id=3;
+UPDATE 1
+clg=# UPDATE students SET marks=88 WHERE id=2;
+UPDATE 1
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  1 | Rahul   |  21 | BCA    |    92
+  4 | gowri   |  20 | BCA    |    88
+  3 | yashoda |  21 | BCA    |    88
+  2 | hajira  |  20 | BCA    |    88
+(4 rows)
+
+
+clg=# UPDATE students SET name='shree' WHERE id=1;
+UPDATE 1
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  4 | gowri   |  20 | BCA    |    88
+  3 | yashoda |  21 | BCA    |    88
+  2 | hajira  |  20 | BCA    |    88
+  1 | shree   |  21 | BCA    |    92
+(4 rows)
+
+
+clg=# UPDATE students SET marks=97 WHERE id IN( 1,3,4);
+UPDATE 3
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  2 | hajira  |  20 | BCA    |    88
+  1 | shree   |  21 | BCA    |    97
+  3 | yashoda |  21 | BCA    |    97
+  4 | gowri   |  20 | BCA    |    97
+(4 rows)
+
+
+clg=# UPDATE students SET marks=97 WHERE id=2;
+UPDATE 1
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  1 | shree   |  21 | BCA    |    97
+  3 | yashoda |  21 | BCA    |    97
+  4 | gowri   |  20 | BCA    |    97
+  2 | hajira  |  20 | BCA    |    97
+(4 rows)
+
+
+clg=# UPDATE students SET marks= CASE
+clg-# WHEN id=1 THEN 97
+clg-# WHEN id=2 THEN 97
+clg-# WHEN id=3 THEN 97
+clg-# END
+clg-# WHERE id IN (1,2,3);
+UPDATE 3
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  4 | gowri   |  20 | BCA    |    97
+  1 | shree   |  21 | BCA    |    97
+  2 | hajira  |  20 | BCA    |    97
+  3 | yashoda |  21 | BCA    |    97
+(4 rows)
+
+
+clg=# UPDATE students SET marks=97+100;
+UPDATE 4
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  4 | gowri   |  20 | BCA    |   197
+  1 | shree   |  21 | BCA    |   197
+  2 | hajira  |  20 | BCA    |   197
+  3 | yashoda |  21 | BCA    |   197
+(4 rows)
+
+
+clg=# DELETE FROM students id=1;
+ERROR:  syntax error at or near "="
+LINE 1: DELETE FROM students id=1;
+                               ^
+clg=# DELETE FROM students WHERE id=1;
+DELETE 1
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  4 | gowri   |  20 | BCA    |   197
+  2 | hajira  |  20 | BCA    |   197
+  3 | yashoda |  21 | BCA    |   197
+(3 rows)
+
+
+clg=# select *from students limit 2;
+ id |  name  | age | course | marks
+----+--------+-----+--------+-------
+  4 | gowri  |  20 | BCA    |   197
+  2 | hajira |  20 | BCA    |   197
+(2 rows)
+
+
+clg=# select *from students limit 1;
+ id | name  | age | course | marks
+----+-------+-----+--------+-------
+  4 | gowri |  20 | BCA    |   197
+(1 row)
+
+
+clg=# UPDATE students SET marks=97 WHERE id IN( 1,3,4);
+UPDATE 2
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  2 | hajira  |  20 | BCA    |   197
+  3 | yashoda |  21 | BCA    |    97
+  4 | gowri   |  20 | BCA    |    97
+(3 rows)
+
+
+clg=# UPDATE students SET name='shree' WHERE id=1;
+UPDATE 0
+clg=# UPDATE students SET marks=99 WHERE id=1;
+UPDATE 0
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  2 | hajira  |  20 | BCA    |   197
+  3 | yashoda |  21 | BCA    |    97
+  4 | gowri   |  20 | BCA    |    97
+(3 rows)
+
+
+clg=# SELECT * FROM students ORDER BY marks DESC limit 2;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  2 | hajira  |  20 | BCA    |   197
+  3 | yashoda |  21 | BCA    |    97
+(2 rows)
+
+
+clg=# select count(*) from students;
+ count
+-------
+     3
+(1 row)
+
+
+clg=# UPDATE students SET course='bba' WHERE id =2;
+UPDATE 1
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  3 | yashoda |  21 | BCA    |    97
+  4 | gowri   |  20 | BCA    |    97
+  2 | hajira  |  20 | bba    |   197
+(3 rows)
+
+
+clg=# UPDATE students SET course='cse' WHERE id in (3,4);
+UPDATE 2
+clg=# SELECT * FROM students;
+ id |  name   | age | course | marks
+----+---------+-----+--------+-------
+  2 | hajira  |  20 | bba    |   197
+  3 | yashoda |  21 | cse    |    97
+  4 | gowri   |  20 | cse    |    97
+(3 rows)
+
+
+clg=# select course, count(*) from students group by course;
+ course | count
+--------+-------
+ cse    |     2
+ bba    |     1
+(2 rows)
+
+
+clg=# select course, max(marks) from students group by course;
+ course | max
+--------+-----
+ cse    |  97
+ bba    | 197
+(2 rows)
+
+
+clg=# select course, avg(marks) from students group by course;
+ course |         avg
+--------+----------------------
+ cse    |  97.0000000000000000
+ bba    | 197.0000000000000000
+(2 rows)
+
+
+clg=# select course, min(marks) from students group by course;
+ course | min
+--------+-----
+ cse    |  97
+ bba    | 197
+(2 rows)
+
+
+clg=# select max(marks) from students;
+ max
+-----
+ 197
+(1 row)
+
+
+clg=# select min(marks) from students;
+ min
+-----
+  97
+(1 row)
+
+
+clg=# select ang(marks) from students;
+ERROR:  function ang(integer) does not exist
+LINE 1: select ang(marks) from students;
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+clg=# select avg(marks) from students;
+         avg
+----------------------
+ 130.3333333333333333
+(1 row)
+
+
+clg=# create table student_card(
+clg(#  card_id serial primary key,
+clg(#  card_number);
+ERROR:  syntax error at or near ")"
+LINE 3:  card_number);
+                    ^
+clg=# create table student_card(
+clg(#  card_id serial primary key,
+clg(#  card_number varchar(50),
+clg(#  id int unique references students(id));
+CREATE TABLE
+clg=# insert into student_card(card_number,student_id) values ('card01',1),('card02',2);
+ERROR:  column "student_id" of relation "student_card" does not exist
+LINE 1: insert into student_card(card_number,student_id) values ('ca...
+                                             ^
+clg=# insert into student_card(card_number, id) values ('card01',1),('card02',2);
+ERROR:  insert or update on table "student_card" violates foreign key constraint "student_card_id_fkey"
+DETAIL:  Key (id)=(1) is not present in table "students".
+clg=# insert into student_card(card_number, id) values ('card01',2),('card02',3);
+INSERT 0 2
+clg=# select 8 from student_card;
+ ?column?
+----------
+        8
+        8
+(2 rows)
+
+
+clg=# drop table student_card;
+DROP TABLE
+clg=# SELECT * FROM student_card;
+ERROR:  relation "student_card" does not exist
+LINE 1: SELECT * FROM student_card;
+                      ^
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=# \dt
+            List of tables
+ Schema |   Name   | Type  |  Owner
+--------+----------+-------+----------
+ public | students | table | postgres
+(1 row)
+
+
+clg=#
+clg=#
+clg=# create table departments(
+clg(# department_id serial primary key,
+clg(# department_name varchar(100));
+CREATE TABLE
+clg=#
+clg=#
+clg=# insert into departments(department_name)
+clg-# values
+clg-# ('cse')
+clg-# ('mech')
+clg-# ('ece')
+clg-# ('eee')
+clg-# ('aiml');
+ERROR:  syntax error at or near "("
+LINE 4: ('mech')
+        ^
+clg=# insert into departments(department_name)
+clg-# values
+clg-# ('cse'),
+clg-# ('mech'),
+clg-# ('ece'),
+clg-# ('eee'),
+clg-# ('aiml');
+INSERT 0 5
+clg=# create table new(
+clg(# employee_id serial primary key,
+clg(# employee_name varchar(100),
+clg(# salary int,
+clg(# department_id int references departments(department_id));
+CREATE TABLE
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=#
+clg=# insert into employee(employee_name,salary,department_id)
+clg-# values
+clg-# ('shree',100000,2),
+clg-# ('sanjana',10000,3),
+clg-# ('hema',20000,1),
+clg-# ('chanda',35000,2);
+ERROR:  relation "employee" does not exist
+LINE 1: insert into employee(employee_name,salary,department_id)
+                    ^
+clg=# insert into new(employee_name,salary,department_id)
+clg-# values
+clg-# ('shree',100000,2),
+clg-# ('sanjana',10000,3),
+clg-# ('hema',20000,1),
+clg-# ('chanda',35000,2),
+clg-# ('yash',45000,1);
+INSERT 0 5
+clg=#
