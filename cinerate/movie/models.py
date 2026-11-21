@@ -13,11 +13,15 @@ class movie(models.Model):
 
     
     def average_rating(self):
-        reviews =self.reviews.all()
+        reviews = self.review_set.all()
         if reviews.count() == 0:
             return 0
         total = sum(review.rating for review in reviews)
         return round(total/reviews.count(),1)
+
+
+Movie = movie
+
 
 class Review(models.Model):
     RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
